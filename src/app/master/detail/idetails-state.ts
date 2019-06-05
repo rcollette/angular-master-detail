@@ -1,0 +1,3 @@
+interface IDetailsState {
+  my: string;
+}
