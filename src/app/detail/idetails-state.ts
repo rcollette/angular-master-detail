@@ -1,3 +1,3 @@
 interface IDetailsState {
-  my: string;
+  count: number;
 }

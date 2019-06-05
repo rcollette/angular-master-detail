@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map, tap } from 'rxjs/operators';
-import { IDetailsResult } from '../detail/idetails-result';
+import { filter, map } from 'rxjs/operators';
+import { IDetailsResult } from '../../detail/idetails-result';
 import { IMasterRouterState } from './i-master-router-state';
 
 @Component({
@@ -11,13 +11,14 @@ import { IMasterRouterState } from './i-master-router-state';
 })
 export class MasterComponent implements OnInit {
 
+  public count = 1;
   private childValue: IDetailsResult;
 
   constructor(private route: ActivatedRoute, private router: Router) {
     console.log('in constructor');
     router.events
       .pipe(
-        tap(event => console.log('router event and state: ', event, this.router.getCurrentNavigation().extras.state)),
+        // tap(event => console.log('router event and state: ', event, this.router.getCurrentNavigation().extras.state)),
         filter(event => event instanceof NavigationEnd),
         map(() => this.router.getCurrentNavigation().extras.state),
         filter(state => !!state && !!state.detailsResult),
@@ -40,6 +41,7 @@ export class MasterComponent implements OnInit {
 
   // Arrow function to preserve this context on callback.
   private handleDetailsResult = (detailsResult: IDetailsResult) => {
+    this.count += 1;
     this.childValue = detailsResult;
     console.log('currentNavigation state', this.router.getCurrentNavigation().extras.state);
   };

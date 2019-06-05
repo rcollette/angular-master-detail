@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, tap } from 'rxjs/operators';
-import { IMasterRouterState } from '../master/i-master-router-state';
 import { IDetailsResult } from './idetails-result';
 
 @Component({
@@ -11,19 +10,29 @@ import { IDetailsResult } from './idetails-result';
 })
 export class DetailComponent implements OnInit {
 
+  private detailsState: IDetailsState;
+
   constructor(private router: Router, private route: ActivatedRoute) {
     this.router.events
       .pipe(
         tap(event => console.log('child router event and state: ', event, this.router.getCurrentNavigation().extras.state)),
         filter(event => event instanceof NavigationEnd),
         map(() => this.router.getCurrentNavigation().extras.state),
-        filter(state => !!state && !!state.my),
-        map((state: IMasterRouterState) => state.detailsResult)
-      ).subscribe(() => console.log('an event'));
+        filter((state: IDetailsState) => !!state && !!state.count)
+      ).subscribe(this.handleState);
+  }
+
+  public get state(): IDetailsState {
+    return this.detailsState;
   }
 
   ngOnInit() {
-    console.log('detail on init');
+    console.log('detail init');
+    // return to master if I have no state (i.e. we deep linked here.)
+    if (!this.state) {
+      console.log('no state.');
+      this.router.navigate(['../'], {relativeTo: this.route});
+    }
   }
 
   public close(): Promise<boolean> {
@@ -33,4 +42,10 @@ export class DetailComponent implements OnInit {
     // TODO - I'm not thrilled that the component now has to be aware that it is only used as a child.
     return this.router.navigate(['../'], {relativeTo: this.route, state: {detailsResult}});
   }
+
+  // Must be an arrow function to preserve this context.
+  private handleState = (state: IDetailsState) => {
+    console.log('handling state in child.', state);
+    this.detailsState = state;
+  };
 }

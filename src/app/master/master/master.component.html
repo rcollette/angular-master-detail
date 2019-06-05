@@ -1,8 +1,8 @@
-<p *ngIf="!!valueFromChild">
-  Value from child:{{valueFromChild|json}}
-</p>
-<p *ngIf="show">
-  <a [routerLink]="['detail']" state="{my:'value'}">Go to child</a>;
-</p>
+<div *ngIf="show">
+  <p *ngIf="!!valueFromChild">
+    Value from child:{{valueFromChild|json}}
+  </p>
+  <a [routerLink]="['detail']" [state]="{count:count}">Go to child</a>;
+</div>
 <router-outlet></router-outlet>
 

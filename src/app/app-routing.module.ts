@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DetailComponent } from './master/detail/detail.component';
+import { DetailComponent } from './detail/detail.component';
+
 import { MasterComponent } from './master/master/master.component';
 
 
