@@ -1,7 +1,7 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map, tap } from 'rxjs/operators';
-import { IDetailsResult } from './idetails-result';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IDetailsResult } from '../idetails-result';
 
 @Component({
   selector: 'app-detail',
@@ -12,14 +12,7 @@ export class DetailComponent implements OnInit {
 
   private detailsState: IDetailsState;
 
-  constructor(private router: Router, private route: ActivatedRoute) {
-    this.router.events
-      .pipe(
-        tap(event => console.log('child router event and state: ', event, this.router.getCurrentNavigation().extras.state)),
-        filter(event => event instanceof NavigationEnd),
-        map(() => this.router.getCurrentNavigation().extras.state),
-        filter((state: IDetailsState) => !!state && !!state.count)
-      ).subscribe(this.handleState);
+  constructor(private router: Router, private route: ActivatedRoute, private location: Location) {
   }
 
   public get state(): IDetailsState {
@@ -27,6 +20,7 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.detailsState = this.location.getState() as IDetailsState;
     console.log('detail init');
     // return to master if I have no state (i.e. we deep linked here.)
     if (!this.state) {
@@ -43,9 +37,4 @@ export class DetailComponent implements OnInit {
     return this.router.navigate(['../'], {relativeTo: this.route, state: {detailsResult}});
   }
 
-  // Must be an arrow function to preserve this context.
-  private handleState = (state: IDetailsState) => {
-    console.log('handling state in child.', state);
-    this.detailsState = state;
-  };
 }

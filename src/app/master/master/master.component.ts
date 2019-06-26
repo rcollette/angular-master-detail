@@ -44,6 +44,6 @@ export class MasterComponent implements OnInit {
     this.count += 1;
     this.childValue = detailsResult;
     console.log('currentNavigation state', this.router.getCurrentNavigation().extras.state);
-  };
+  }
 
 }
